@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/h"
-
 echo "🔍 Running full tests and lint before push..."
 
 npm run lint
