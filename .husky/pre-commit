@@ -1,2 +1,5 @@
-npm run lint
-npm run format
+npm lint
+npm test
+npm format
+
+exit 1
