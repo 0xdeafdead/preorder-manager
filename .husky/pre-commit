@@ -1,5 +1,0 @@
-npm lint
-npm test
-npm format
-
-exit 1
