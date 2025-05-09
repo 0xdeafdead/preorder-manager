@@ -1,0 +1,21 @@
+services:
+  mongo_db:
+    image: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db #mongo data
+      - mongo_config:/data/configdb #persis mongodb config
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_DATABASE=preorder-manager #${MONGO_DB}
+      - MONGO_INITDB_ROOT_USERNAME=root #${MONGO_ADMIN_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=password #${MONGO_ADMIN_PASSWORD}
+
+volumes:
+  mongo_data:
+    driver: local
+  mongo_config:
+    driver: local

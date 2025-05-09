@@ -1,0 +1,117 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateOrderInput {
+  preorderId: String!
+
+  """Amount of items to request"""
+  quantity: Int!
+  userId: String!
+}
+
+input CreatePreorderInput {
+  closeDate: DateTime!
+  description: String
+  price: Float!
+  productName: String!
+  productSKU: String!
+  releaseDate: DateTime!
+  tags: [Game!]!
+}
+
+input CreateUserInput {
+  email: String!
+  fullName: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum Game {
+  DIGIMON
+  MTG
+  ONEPIECE
+  POKEMON
+}
+
+"""Mongo Object Id"""
+scalar MongoObjectId
+
+type Mutation {
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  createPreorder(input: CreatePreorderInput!): Preorder!
+  createUser(input: CreateUserInput!): User!
+  removeOrder(id: Int!): Order!
+  removePreorder(id: String!): Preorder!
+  removeUser(id: String!): User!
+  updateOrder(updateOrderInput: UpdateOrderInput!): Order!
+  updatePreorder(input: UpdatePreorderInput!): Preorder!
+  updateUser(input: UpdateUserInput!): User!
+}
+
+type Order {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: MongoObjectId!
+  preorder: Preorder!
+  quantity: Int!
+  updatedAt: DateTime!
+  user: User!
+}
+
+type Preorder {
+  available: Boolean!
+  closeDate: DateTime!
+  description: String
+  id: MongoObjectId!
+  price: Float!
+  productName: String!
+  productSKU: String!
+  releaseDate: DateTime!
+  tags: [Game!]!
+}
+
+type Query {
+  order(id: Int!): Order!
+  preorder(id: String!): Preorder!
+  preorders: [Preorder!]!
+  user(id: String!): User!
+  users: [User!]!
+}
+
+input UpdateOrderInput {
+  id: Int!
+
+  """Amount of items to request"""
+  quantity: Int!
+}
+
+input UpdatePreorderInput {
+  closeDate: DateTime
+  description: String
+  id: Int!
+  price: Float
+  productName: String
+  productSKU: String
+  releaseDate: DateTime
+  tags: [Game!]
+}
+
+input UpdateUserInput {
+  email: String!
+  fullName: String!
+  id: String!
+}
+
+type User {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  email: String!
+  enabled: String!
+  fullName: String!
+  id: MongoObjectId!
+  updatedAt: DateTime!
+}
