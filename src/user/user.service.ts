@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { from, Observable } from 'rxjs';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { from, Observable, of, switchMap } from 'rxjs';
 import { CreateUserInput, UpdateUserInput } from './inputs';
 import { UserRepository } from './repositories/user.repository';
 import { User } from './schemas/user.schema';
@@ -19,19 +19,47 @@ export class UserService {
     return from(this.userRepository.findAll());
   }
 
-  findOne(id: string): Observable<User | null> {
-    return from(this.userRepository.findById(id));
+  findOne(id: string): Observable<User> {
+    return from(this.userRepository.findById(id)).pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+        return of(user);
+      }),
+    );
   }
 
-  update(updateUserInput: UpdateUserInput) {
-    return from(this.userRepository.update(updateUserInput));
+  update(updateUserInput: UpdateUserInput): Observable<User> {
+    return from(this.userRepository.update(updateUserInput)).pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+        return of(user);
+      }),
+    );
   }
 
-  softDelete(id: string) {
-    return from(this.userRepository.softDelete(id));
+  softDelete(id: string): Observable<User> {
+    return from(this.userRepository.softDelete(id)).pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+        return of(user);
+      }),
+    );
   }
 
-  remove(id: string) {
-    return from(this.userRepository.delete(id));
+  remove(id: string): Observable<User> {
+    return from(this.userRepository.delete(id)).pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+        return of(user);
+      }),
+    );
   }
 }

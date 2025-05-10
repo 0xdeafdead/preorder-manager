@@ -44,6 +44,7 @@ type Mutation {
   createOrder(createOrderInput: CreateOrderInput!): Order!
   createPreorder(input: CreatePreorderInput!): Preorder!
   createUser(input: CreateUserInput!): User!
+  deactivateUser(id: String!): User!
   removeOrder(id: Int!): Order!
   removePreorder(id: String!): Preorder!
   removeUser(id: String!): User!
@@ -75,11 +76,11 @@ type Preorder {
 }
 
 type Query {
+  getUserById(id: String!): User!
+  listUsers: [User!]!
   order(id: Int!): Order!
   preorder(id: String!): Preorder!
   preorders: [Preorder!]!
-  user(id: String!): User!
-  users: [User!]!
 }
 
 input UpdateOrderInput {
@@ -101,17 +102,17 @@ input UpdatePreorderInput {
 }
 
 input UpdateUserInput {
-  email: String!
-  fullName: String!
+  email: String
+  fullName: String
   id: String!
 }
 
 type User {
+  _id: MongoObjectId!
   createdAt: DateTime!
   deletedAt: DateTime
   email: String!
-  enabled: String!
+  enabled: Boolean!
   fullName: String!
-  id: MongoObjectId!
   updatedAt: DateTime!
 }

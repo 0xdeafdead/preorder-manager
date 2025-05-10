@@ -1,6 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { CreateUserInput } from './create-user.input';
-import { InputType, Field, Int, PartialType, ID } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsEmail, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 
 @InputType()
 export class UpdateUserInput {
@@ -9,15 +8,15 @@ export class UpdateUserInput {
   @IsNotEmpty()
   id: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
+  @ValidateIf((o) => o.fullName !== undefined)
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   fullName?: string;
 
-  @Field(() => String)
-  @IsString()
+  @Field(() => String, { nullable: true })
+  @ValidateIf((o) => o.email !== undefined)
+  @IsEmail()
   @IsNotEmpty()
-  @IsOptional()
   email?: string;
 }

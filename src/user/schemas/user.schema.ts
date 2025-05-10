@@ -9,20 +9,20 @@ export type UserDocument = HydratedDocument<User>;
 @ObjectType()
 export class User {
   @Prop({ type: Types.ObjectId })
-  @Field(() => MongoObjectId)
+  @Field(() => MongoObjectId, { name: '_id' })
   id: Types.ObjectId;
 
   @Prop()
   @Field(() => String)
   fullName: string;
 
-  @Prop()
+  @Prop({ unique: true })
   @Field(() => String)
   email: string;
 
   @Prop({ default: true })
-  @Field(() => String)
-  enabled: string;
+  @Field(() => Boolean, { defaultValue: true })
+  enabled: boolean;
 
   @Prop({ default: now() })
   @Field(() => Date)

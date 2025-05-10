@@ -2,9 +2,11 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
+import { GraphQLError } from 'graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongoObjectId } from './core/scalars/MongoObjecId';
+import { OriginalError } from './core/types';
 import { OrderModule } from './order/order.module';
 import { PreorderModule } from './preorder/preorder.module';
 import { UserModule } from './user/user.module';
@@ -16,11 +18,36 @@ import { UserModule } from './user/user.module';
       user: 'root',
       pass: 'password',
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
-      sortSchema: true,
-      introspection: true,
+      useFactory: () => {
+        return {
+          autoSchemaFile: 'schema.gql',
+          sortSchema: true,
+          introspection: true,
+          playground: false,
+          context: ({ req, res }: { req: Request; res: Response }) => ({
+            req,
+            res,
+          }),
+          formatError: (error: GraphQLError) => {
+            const originalError = error?.extensions
+              ?.originalError as OriginalError;
+            if (!originalError) {
+              return {
+                message: error.message,
+                code: error.extensions?.code,
+                status: error.extensions?.status,
+              };
+            }
+            return {
+              message: originalError.message,
+              code: originalError.statusCode,
+              status: originalError.error,
+            };
+          },
+        };
+      },
     }),
     MongoObjectId,
     UserModule,
