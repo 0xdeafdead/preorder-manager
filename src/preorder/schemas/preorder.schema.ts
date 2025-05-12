@@ -26,7 +26,7 @@ export class Preorder {
   price: number;
 
   @Prop({ default: true })
-  @Field(() => Boolean, { defaultValue: true })
+  @Field(() => Boolean, { defaultValue: false })
   available: boolean;
 
   @Prop(() => Date)
@@ -36,6 +36,10 @@ export class Preorder {
   @Prop(() => Date)
   @Field(() => Date)
   closeDate: Date;
+
+  @Prop({ type: Date, default: null, options: { nullable: true } })
+  @Field(() => Date, { nullable: true })
+  deletedAt?: Date;
 
   @Prop({ nullable: true })
   @Field(() => String, { nullable: true })

@@ -1,5 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { forkJoin, Observable, of, switchMap } from 'rxjs';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { forkJoin, from, Observable, of, switchMap } from 'rxjs';
 import { PreorderService } from '../preorder/preorder.service';
 import { UserService } from '../user/user.service';
 import { CreateOrderInput } from './inputs/create-order.input';
@@ -14,6 +18,7 @@ export class OrderService {
     private readonly userService: UserService,
     private readonly preorderService: PreorderService,
   ) {}
+
   create(input: CreateOrderInput): Observable<Order> {
     const $user = this.userService.findOne(input.userId).pipe(
       switchMap((user) => {
@@ -43,19 +48,40 @@ export class OrderService {
     );
   }
 
-  findAll() {
-    return this.orderRepository.findAll();
+  findAll(): Observable<Order[]> {
+    return from(this.orderRepository.findAll()).pipe(
+      switchMap((orders) => {
+        if (!orders) {
+          throw new NotFoundException('Orders not found');
+        }
+        return of(orders);
+      }),
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  findOne(id: string): Observable<Order> {
+    return from(this.orderRepository.findOneOrThrow(id)).pipe(
+      switchMap((order) => of(order)),
+    );
   }
 
-  update(id: number, updateOrderInput: UpdateOrderInput) {
-    return `This action updates a #${id} order`;
+  update(input: UpdateOrderInput): Observable<Order> {
+    const { id, ...data } = input;
+    return this.findOne(id).pipe(
+      switchMap((order) => {
+        if (data.quantity > 0 && input.quantity < order.quantity) {
+          return from(this.orderRepository.update(id, data));
+        }
+        throw new BadRequestException(
+          `Cannot increase quantity for an existing order. A new order must be created`,
+        );
+      }),
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  remove(id: string) {
+    return from(
+      this.orderRepository.update(id, { deletedAt: new Date() }),
+    ).pipe(switchMap((order) => of(order)));
   }
 }

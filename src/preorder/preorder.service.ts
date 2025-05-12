@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { from, Observable } from 'rxjs';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { from, Observable, of, switchMap } from 'rxjs';
 import { CreatePreorderInput } from './input/create-preorder.input';
 import { UpdatePreorderInput } from './input/update-preorder.input';
 import { PreorderRepository } from './repositories/preorder.repository';
@@ -16,23 +16,67 @@ export class PreorderService {
     return from(this.preorderRepository.create(createPreorderInput));
   }
 
-  findAll() {
+  findAll(): Observable<Preorder[]> {
     return from(this.preorderRepository.findAll());
   }
 
-  findOne(id: string) {
-    return from(this.preorderRepository.findById(id));
+  findOne(id: string): Observable<Preorder> {
+    return from(this.preorderRepository.findById(id)).pipe(
+      switchMap((preorder) => {
+        if (!preorder) {
+          throw new NotFoundException('Preorder not found');
+        }
+        return of(preorder);
+      }),
+    );
   }
 
-  update(updatePreorderInput: UpdatePreorderInput) {
-    return from(this.preorderRepository.update(updatePreorderInput));
+  update(updatePreorderInput: UpdatePreorderInput): Observable<Preorder> {
+    const { id, ...data } = updatePreorderInput;
+    return from(this.preorderRepository.update(id, data)).pipe(
+      switchMap((preorder) => {
+        if (!preorder) {
+          throw new NotFoundException('Preorder not found');
+        }
+        return of(preorder);
+      }),
+    );
   }
 
-  softDelete(id: string) {
-    return from(this.preorderRepository.softDelete(id));
+  changeAvailability(id: string): Observable<Preorder> {
+    return from(this.preorderRepository.changeAvailability(id)).pipe(
+      switchMap((preorder) => {
+        if (!preorder) {
+          throw new NotFoundException('Preorder not found');
+        }
+        return of(preorder);
+      }),
+    );
   }
 
-  remove(id: string) {
-    return from(this.preorderRepository.delete(id));
+  softDelete(id: string): Observable<Preorder> {
+    return from(
+      this.preorderRepository.update(id, {
+        deletedAt: new Date(),
+      }),
+    ).pipe(
+      switchMap((preorder) => {
+        if (!preorder) {
+          throw new NotFoundException('Preorder not found');
+        }
+        return of(preorder);
+      }),
+    );
+  }
+
+  remove(id: string): Observable<Preorder> {
+    return from(this.preorderRepository.delete(id)).pipe(
+      switchMap((preorder) => {
+        if (!preorder) {
+          throw new NotFoundException('Preorder not found');
+        }
+        return of(preorder);
+      }),
+    );
   }
 }

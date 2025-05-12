@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { CreateOrderInput } from './inputs/create-order.input';
 import { UpdateOrderInput } from './inputs/update-order.input';
@@ -10,29 +10,27 @@ export class OrderResolver {
   constructor(private readonly orderService: OrderService) {}
 
   @Mutation(() => Order)
-  createOrder(
-    @Args('createOrderInput') createOrderInput: CreateOrderInput,
-  ): Observable<Order> {
-    return this.orderService.create(createOrderInput);
+  createOrder(@Args('input') input: CreateOrderInput): Observable<Order> {
+    return this.orderService.create(input);
   }
 
-  @Query(() => [Order], { name: 'order' })
-  findAll() {
+  @Query(() => [Order])
+  listOrders(): Observable<Order[]> {
     return this.orderService.findAll();
   }
 
-  @Query(() => Order, { name: 'order' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => Order)
+  getOrderById(@Args('id') id: string): Observable<Order> {
     return this.orderService.findOne(id);
   }
 
   @Mutation(() => Order)
-  updateOrder(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
-    return this.orderService.update(updateOrderInput.id, updateOrderInput);
+  updateOrder(@Args('input') input: UpdateOrderInput): Observable<Order> {
+    return this.orderService.update(input);
   }
 
   @Mutation(() => Order)
-  removeOrder(@Args('id', { type: () => Int }) id: number) {
+  removeOrder(@Args('id') id: string): Observable<Order> {
     return this.orderService.remove(id);
   }
 }

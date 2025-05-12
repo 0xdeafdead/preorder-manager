@@ -1,5 +1,6 @@
 import { Field, Float, InputType } from '@nestjs/graphql';
 import {
+  IsArray,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -37,6 +38,8 @@ export class CreatePreorderInput {
   description?: string;
 
   @Field(() => [Game])
-  @IsEnum(Game)
+  @IsArray()
+  @IsNotEmpty()
+  @IsEnum(Game, { each: true })
   tags: Game[];
 }

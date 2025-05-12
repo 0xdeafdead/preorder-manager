@@ -15,7 +15,7 @@ export class UserService {
     return from(this.userRepository.create(createUserInput));
   }
 
-  findAll() {
+  findAll(): Observable<User[]> {
     return from(this.userRepository.findAll());
   }
 
@@ -31,7 +31,8 @@ export class UserService {
   }
 
   update(updateUserInput: UpdateUserInput): Observable<User> {
-    return from(this.userRepository.update(updateUserInput)).pipe(
+    const { id, ...data } = updateUserInput;
+    return from(this.userRepository.update(id, data)).pipe(
       switchMap((user) => {
         if (!user) {
           throw new NotFoundException('User not found');
@@ -42,7 +43,9 @@ export class UserService {
   }
 
   softDelete(id: string): Observable<User> {
-    return from(this.userRepository.softDelete(id)).pipe(
+    return from(
+      this.userRepository.update(id, { enabled: false, deletedAt: new Date() }),
+    ).pipe(
       switchMap((user) => {
         if (!user) {
           throw new NotFoundException('User not found');

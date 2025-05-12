@@ -9,7 +9,7 @@ export type UserDocument = HydratedDocument<User>;
 @ObjectType()
 export class User {
   @Prop({ type: Types.ObjectId })
-  @Field(() => MongoObjectId, { name: '_id' })
+  @Field(() => MongoObjectId)
   id: Types.ObjectId;
 
   @Prop()

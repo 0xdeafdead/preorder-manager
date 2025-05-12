@@ -41,14 +41,16 @@ enum Game {
 scalar MongoObjectId
 
 type Mutation {
-  createOrder(createOrderInput: CreateOrderInput!): Order!
+  changeAvailability(id: String!): Preorder!
+  createOrder(input: CreateOrderInput!): Order!
   createPreorder(input: CreatePreorderInput!): Preorder!
   createUser(input: CreateUserInput!): User!
   deactivateUser(id: String!): User!
-  removeOrder(id: Int!): Order!
+  removeOrder(id: String!): Order!
   removePreorder(id: String!): Preorder!
   removeUser(id: String!): User!
-  updateOrder(updateOrderInput: UpdateOrderInput!): Order!
+  softDeletePreorder(id: String!): Preorder!
+  updateOrder(input: UpdateOrderInput!): Order!
   updatePreorder(input: UpdatePreorderInput!): Preorder!
   updateUser(input: UpdateUserInput!): User!
 }
@@ -66,6 +68,7 @@ type Order {
 type Preorder {
   available: Boolean!
   closeDate: DateTime!
+  deletedAt: DateTime
   description: String
   id: MongoObjectId!
   price: Float!
@@ -76,24 +79,27 @@ type Preorder {
 }
 
 type Query {
+  findPreorderById(id: String!): Preorder!
+  getOrderById(id: String!): Order!
   getUserById(id: String!): User!
+  listOrders: [Order!]!
+  listPreorders: [Preorder!]!
   listUsers: [User!]!
-  order(id: Int!): Order!
-  preorder(id: String!): Preorder!
-  preorders: [Preorder!]!
 }
 
 input UpdateOrderInput {
-  id: Int!
+  id: String!
 
-  """Amount of items to request"""
+  """
+  Amount of items to request. Must be lower than actual order, but greater than 0
+  """
   quantity: Int!
 }
 
 input UpdatePreorderInput {
   closeDate: DateTime
   description: String
-  id: Int!
+  id: String!
   price: Float
   productName: String
   productSKU: String
@@ -108,11 +114,11 @@ input UpdateUserInput {
 }
 
 type User {
-  _id: MongoObjectId!
   createdAt: DateTime!
   deletedAt: DateTime
   email: String!
   enabled: Boolean!
   fullName: String!
+  id: MongoObjectId!
   updatedAt: DateTime!
 }
