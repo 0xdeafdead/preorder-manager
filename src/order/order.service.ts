@@ -3,9 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { forkJoin, from, Observable, of, switchMap } from 'rxjs';
-import { PreorderService } from '../preorder/preorder.service';
-import { UserService } from '../user/user.service';
+import { Types } from 'mongoose';
+import { from, Observable, of, switchMap } from 'rxjs';
 import { CreateOrderInput } from './inputs/create-order.input';
 import { UpdateOrderInput } from './inputs/update-order.input';
 import { OrderRepository } from './repositories/order.repository';
@@ -13,39 +12,17 @@ import { Order } from './schemas/order.schema';
 
 @Injectable()
 export class OrderService {
-  constructor(
-    private readonly orderRepository: OrderRepository,
-    private readonly userService: UserService,
-    private readonly preorderService: PreorderService,
-  ) {}
+  constructor(private readonly orderRepository: OrderRepository) {}
 
   create(input: CreateOrderInput): Observable<Order> {
-    const $user = this.userService.findOne(input.userId).pipe(
-      switchMap((user) => {
-        if (!user) {
-          throw new Error('User not found');
-        }
-        return of(user);
+    const { userId, preorderId, quantity } = input;
+    return from(
+      this.orderRepository.create({
+        quantity,
+        user: new Types.ObjectId(userId),
+        preorder: new Types.ObjectId(preorderId),
       }),
-    );
-    const $preorder = this.preorderService.findOne(input.preorderId).pipe(
-      switchMap((preorder) => {
-        if (!preorder) {
-          throw new Error('Preorder not found');
-        }
-        return of(preorder);
-      }),
-    );
-    return forkJoin([$user, $preorder]).pipe(
-      switchMap(async ([user, preorder]) => {
-        const order = await this.orderRepository.create({
-          ...input,
-          user,
-          preorder,
-        });
-        return order;
-      }),
-    );
+    ).pipe(switchMap((order) => of(order)));
   }
 
   findAll(): Observable<Order[]> {

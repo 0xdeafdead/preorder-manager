@@ -11,4 +11,54 @@ export class OrderRepository extends CoreRepository<Order> {
   ) {
     super(orderModel);
   }
+
+  async create(data: Partial<Order>): Promise<Order> {
+    const order = new this.orderModel(data);
+    const savedOrder = await order.save();
+    const populatedOrder = await savedOrder.populate([
+      {
+        path: 'user',
+        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+      },
+      {
+        path: 'preorder',
+        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+      },
+    ]);
+    const plainOrder = populatedOrder.toObject();
+    return { ...plainOrder, id: plainOrder._id };
+  }
+
+  async findById(id: string): Promise<Order | null> {
+    const order = await this.orderModel
+      .findById(id)
+      .populate({
+        path: 'user',
+        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+      })
+      .populate({
+        path: 'preorder',
+        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+      })
+      .exec();
+    if (!order) {
+      return null;
+    }
+    return { ...order.toObject(), id: order._id };
+  }
+
+  async findAll(): Promise<Order[]> {
+    const orders = await this.orderModel
+      .find()
+      .populate({
+        path: 'user',
+        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+      })
+      .populate({
+        path: 'preorder',
+        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+      })
+      .exec();
+    return orders.map((order) => ({ ...order.toObject(), id: order._id }));
+  }
 }

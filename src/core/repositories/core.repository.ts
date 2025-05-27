@@ -27,11 +27,11 @@ export class CoreRepository<T> {
   }
 
   async findOneOrThrow(id: string): Promise<T> {
-    const entity = await this.coreModel.findById(id).exec();
+    const entity = await this.findById(id);
     if (!entity) {
       throw new Error('Entity not found');
     }
-    return { ...entity.toObject(), id: entity._id };
+    return entity;
   }
 
   async update(id: string, data: Partial<T>): Promise<T> {

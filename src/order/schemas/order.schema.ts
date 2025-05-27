@@ -35,11 +35,11 @@ export class Order {
 
   @Prop({ type: Types.ObjectId, ref: 'Preorder' })
   @Field(() => Preorder)
-  preorder: Preorder;
+  preorder: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   @Field(() => User)
-  user: User;
+  user: Types.ObjectId;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
