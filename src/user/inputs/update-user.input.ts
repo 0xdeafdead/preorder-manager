@@ -9,13 +9,13 @@ export class UpdateUserInput {
   id: string;
 
   @Field(() => String, { nullable: true })
-  @ValidateIf((o) => o.fullName !== undefined)
+  @ValidateIf((o: { fullName: string }) => typeof o.fullName !== 'undefined')
   @IsString()
   @IsNotEmpty()
   fullName?: string;
 
   @Field(() => String, { nullable: true })
-  @ValidateIf((o) => o.email !== undefined)
+  @ValidateIf((o: { email: string }) => typeof o.email !== 'undefined')
   @IsEmail()
   @IsNotEmpty()
   email?: string;

@@ -30,7 +30,6 @@ export class PreorderResolver {
   updatePreorder(
     @Args('input') input: UpdatePreorderInput,
   ): Observable<Preorder> {
-    console.log('input', input);
     return this.preorderService.update(input);
   }
 

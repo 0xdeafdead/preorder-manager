@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CoreRepository } from '../../core/repositories/core.repository';
+import { PreorderDocument } from '../../preorder/schemas/preorder.schema';
+import { UserDocument } from '../../user/schemas/user.schema';
 import { Order } from '../schemas/order.schema';
 
 @Injectable()
@@ -14,15 +16,23 @@ export class OrderRepository extends CoreRepository<Order> {
 
   async create(data: Partial<Order>): Promise<Order> {
     const order = new this.orderModel(data);
+
     const savedOrder = await order.save();
+
     const populatedOrder = await savedOrder.populate([
       {
         path: 'user',
-        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+        transform: (doc: UserDocument) => ({
+          ...doc.toObject(),
+          id: doc._id,
+        }),
       },
       {
         path: 'preorder',
-        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+        transform: (doc: PreorderDocument) => ({
+          ...doc.toObject(),
+          id: doc._id,
+        }),
       },
     ]);
     const plainOrder = populatedOrder.toObject();
@@ -34,11 +44,14 @@ export class OrderRepository extends CoreRepository<Order> {
       .findById(id)
       .populate({
         path: 'user',
-        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+        transform: (doc: UserDocument) => ({ ...doc.toObject(), id: doc._id }),
       })
       .populate({
         path: 'preorder',
-        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+        transform: (doc: PreorderDocument) => ({
+          ...doc.toObject(),
+          id: doc._id,
+        }),
       })
       .exec();
     if (!order) {
@@ -52,11 +65,14 @@ export class OrderRepository extends CoreRepository<Order> {
       .find()
       .populate({
         path: 'user',
-        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+        transform: (doc: UserDocument) => ({ ...doc.toObject(), id: doc._id }),
       })
       .populate({
         path: 'preorder',
-        transform: (doc) => ({ ...doc.toObject(), id: doc._id }),
+        transform: (doc: PreorderDocument) => ({
+          ...doc.toObject(),
+          id: doc._id,
+        }),
       })
       .exec();
     return orders.map((order) => ({ ...order.toObject(), id: order._id }));
