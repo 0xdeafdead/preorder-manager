@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { from, Observable, of, switchMap } from 'rxjs';
-import { CreateUserInput, UpdateUserInput } from './inputs';
-import { UserRepository } from './repositories/user.repository';
-import { User } from './schemas/user.schema';
+import { CreateUserInput, UpdateUserInput } from '../inputs';
+import { UserRepository } from '../repositories/user.repository';
+import { User } from '../schemas/user.schema';
 
 @Injectable()
 export class UserService {

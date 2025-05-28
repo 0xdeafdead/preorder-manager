@@ -2,7 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { CreateUserInput, UpdateUserInput } from './inputs';
 import { User } from './schemas/user.schema';
-import { UserService } from './user.service';
+import { UserService } from './services';
 
 @Resolver(() => User)
 export class UserResolver {
