@@ -37,6 +37,27 @@ enum Game {
   POKEMON
 }
 
+input ListOrderInput {
+  page: Int! = 1
+  pageSize: Int! = 10
+  search: String
+  tag: Game
+  userId: String!
+}
+
+input ListPreordersInput {
+  page: Int! = 1
+  pageSize: Int! = 10
+  search: String
+  tag: Game
+}
+
+input ListUsersInput {
+  page: Int! = 1
+  pageSize: Int! = 10
+  search: String
+}
+
 """Mongo Object Id"""
 scalar MongoObjectId
 
@@ -65,6 +86,27 @@ type Order {
   user: User!
 }
 
+type PaginatedOrders {
+  edges: [Order!]
+  page: Int
+  pageSize: Int
+  total: Int
+}
+
+type PaginatedPreorders {
+  edges: [Preorder!]
+  page: Int
+  pageSize: Int
+  total: Int
+}
+
+type PaginatedUsers {
+  edges: [User!]
+  page: Int
+  pageSize: Int
+  total: Int
+}
+
 type Preorder {
   available: Boolean!
   closeDate: DateTime!
@@ -80,11 +122,14 @@ type Preorder {
 
 type Query {
   findPreorderById(id: String!): Preorder!
+  getAllOrders: [Order!]!
+  getAllPreorders: [Preorder!]!
+  getAllUsers: [User!]!
   getOrderById(id: String!): Order!
   getUserById(id: String!): User!
-  listOrders: [Order!]!
-  listPreorders: [Preorder!]!
-  listUsers: [User!]!
+  listOrders(input: ListOrderInput!): PaginatedOrders!
+  listPreorders(input: ListPreordersInput!): PaginatedPreorders!
+  listUsers(input: ListUsersInput!): PaginatedUsers!
 }
 
 input UpdateOrderInput {

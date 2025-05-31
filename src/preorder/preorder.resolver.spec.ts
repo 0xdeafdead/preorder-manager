@@ -5,7 +5,7 @@ import { DeepPartialMock } from '../core/types';
 import { CreatePreorderInput, UpdatePreorderInput } from './input';
 import { preorderServiceMock } from './mocks';
 import { PreorderResolver } from './preorder.resolver';
-import { PreorderService } from './preorder.service';
+import { PreorderService } from './services';
 
 describe('PreorderResolver', () => {
   let resolver: PreorderResolver;
@@ -48,7 +48,7 @@ describe('PreorderResolver', () => {
 
   describe('listPreorders', () => {
     it('should call preorderService.findAll', () => {
-      resolver.listPreorders();
+      resolver.getAllPreorders();
       expect(preorderService.findAll).toHaveBeenCalled();
     });
   });

@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { plainToInstance } from 'class-transformer';
+import { Model, RootFilterQuery, Types } from 'mongoose';
 import { CoreRepository } from '../../core/repositories/core.repository';
+import { ListPreordersInput } from '../input';
 import { Preorder } from '../schemas/preorder.schema';
+import { PaginatedPreorders } from '../types';
 
 @Injectable()
 export class PreorderRepository extends CoreRepository<Preorder> {
@@ -23,6 +26,43 @@ export class PreorderRepository extends CoreRepository<Preorder> {
     preorder.available = !preorder.available;
     const newPreorder = await preorder.save();
     return { ...newPreorder.toObject(), id: newPreorder._id };
+  }
+
+  async listPreorders(input: ListPreordersInput): Promise<PaginatedPreorders> {
+    console.log('input', input);
+    const { page, pageSize, search, tag } = input;
+
+    const whereClause: RootFilterQuery<Preorder> = {
+      deletedAt: null,
+    };
+
+    if (tag) {
+      whereClause.tags = { $in: [tag] };
+    }
+
+    if (search) {
+      whereClause.productName = { $regex: search, $options: 'i' };
+      whereClause.productSKU = { $regex: search, $options: 'i' };
+    }
+    const results = await this.preorderModel
+      .find(whereClause)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .exec()
+      .then((docs) =>
+        docs.map((doc) =>
+          plainToInstance(Preorder, { ...doc.toObject(), id: doc._id }),
+        ),
+      );
+
+    const count = await this.preorderModel.countDocuments(whereClause).exec();
+    return {
+      edges: results,
+      total: count,
+      page,
+      pageSize,
+    };
   }
 
   // async create(data: CreatePreorderInput): Promise<Preorder> {

@@ -1,8 +1,9 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { from, Observable, of, switchMap } from 'rxjs';
-import { CreateUserInput, UpdateUserInput } from '../inputs';
+import { CreateUserInput, ListUsersInput, UpdateUserInput } from '../inputs';
 import { UserRepository } from '../repositories/user.repository';
 import { User } from '../schemas/user.schema';
+import { PaginatedUsers } from '../types';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,10 @@ export class UserService {
 
   findAll(): Observable<User[]> {
     return from(this.userRepository.findAll());
+  }
+
+  list(listUserInput: ListUsersInput): Observable<PaginatedUsers> {
+    return from(this.userRepository.listUsers(listUserInput));
   }
 
   findOne(id: string): Observable<User> {

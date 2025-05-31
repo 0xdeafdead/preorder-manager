@@ -1,14 +1,13 @@
 import { faker } from '@faker-js/faker/.';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { buildMongoId } from '../core/factories';
-import { DeepPartialMock } from '../core/types';
-import { PreorderFactory } from './factories/preorder.factory';
-import { CreatePreorderInput } from './input/create-preorder.input';
-import { UpdatePreorderInput } from './input/update-preorder.input';
-import { preorderRepositoryMock } from './mocks/preorder.repository.mock';
+import { buildMongoId } from '../../core/factories';
+import { DeepPartialMock } from '../../core/types';
+import { PreorderFactory } from '../factories/preorder.factory';
+import { CreatePreorderInput, UpdatePreorderInput } from '../input';
+import { preorderRepositoryMock } from '../mocks';
+import { PreorderRepository } from '../repositories/preorder.repository';
 import { PreorderService } from './preorder.service';
-import { PreorderRepository } from './repositories/preorder.repository';
 
 describe('PreorderService', () => {
   let service: PreorderService;

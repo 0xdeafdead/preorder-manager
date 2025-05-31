@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PreorderResolver } from './preorder.resolver';
-import { PreorderService } from './preorder.service';
 import { PreorderRepository } from './repositories/preorder.repository';
 import { PreorderSchema } from './schemas/preorder.schema';
+import { PreorderService } from './services';
 
 @Module({
   imports: [

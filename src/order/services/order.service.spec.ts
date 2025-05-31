@@ -2,14 +2,14 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Types } from 'mongoose';
 import { of } from 'rxjs';
-import { buildMongoId } from '../core/factories';
-import { DeepPartialMock } from '../core/types/deepPartialMock';
-import { OrderFactory } from './factories/order.factory';
-import { CreateOrderInput } from './inputs/create-order.input';
-import { UpdateOrderInput } from './inputs/update-order.input';
-import { orderRepositoryMock } from './mocks/order.repository.mock';
+import { buildMongoId } from '../../core/factories';
+import { DeepPartialMock } from '../../core/types/deepPartialMock';
+import { OrderFactory } from '../factories/order.factory';
+import { CreateOrderInput } from '../inputs/create-order.input';
+import { UpdateOrderInput } from '../inputs/update-order.input';
+import { orderRepositoryMock } from '../mocks/order.repository.mock';
+import { OrderRepository } from '../repositories/order.repository';
 import { OrderService } from './order.service';
-import { OrderRepository } from './repositories/order.repository';
 
 describe('OrderService', () => {
   let service: OrderService;

@@ -12,10 +12,12 @@ export class CoreRepository<T> {
   }
 
   async findAll(): Promise<T[]> {
-    return (await this.coreModel.find().exec()).map((entity) => ({
-      ...entity.toObject(),
-      id: entity._id,
-    }));
+    return (await this.coreModel.find().sort({ createdAt: -1 }).exec()).map(
+      (entity) => ({
+        ...entity.toObject(),
+        id: entity._id,
+      }),
+    );
   }
 
   async findById(id: string): Promise<T | null> {

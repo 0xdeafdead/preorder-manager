@@ -5,7 +5,7 @@ import { DeepPartialMock } from '../core/types';
 import { CreateOrderInput, UpdateOrderInput } from './inputs';
 import { orderServiceMock } from './mocks/order.service.mock';
 import { OrderResolver } from './order.resolver';
-import { OrderService } from './order.service';
+import { OrderService } from './services/order.service';
 
 describe('OrderResolver', () => {
   let resolver: OrderResolver;
@@ -43,9 +43,9 @@ describe('OrderResolver', () => {
     });
   });
 
-  describe('listOrders', () => {
+  describe('getAllOrders', () => {
     it('should call orderService.findAll', () => {
-      resolver.listOrders();
+      resolver.getAllOrders();
       expect(orderService.findAll).toHaveBeenCalled();
     });
   });
