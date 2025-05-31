@@ -5,10 +5,12 @@ import {
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { from, Observable, of, switchMap } from 'rxjs';
-import { CreateOrderInput } from './inputs/create-order.input';
-import { UpdateOrderInput } from './inputs/update-order.input';
-import { OrderRepository } from './repositories/order.repository';
-import { Order } from './schemas/order.schema';
+import { CreateOrderInput } from '../inputs/create-order.input';
+import { ListOrderInput } from '../inputs/list-order.input';
+import { UpdateOrderInput } from '../inputs/update-order.input';
+import { OrderRepository } from '../repositories/order.repository';
+import { Order } from '../schemas/order.schema';
+import { PaginatedOrders } from '../types/paginatedOrders';
 
 @Injectable()
 export class OrderService {
@@ -34,6 +36,10 @@ export class OrderService {
         return of(orders);
       }),
     );
+  }
+
+  list(input: ListOrderInput): Observable<PaginatedOrders> {
+    return from(this.orderRepository.listOrders(input));
   }
 
   findOne(id: string): Observable<Order> {

@@ -1,8 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
-import { CreateUserInput, UpdateUserInput } from './inputs';
+import { CreateUserInput, ListUsersInput, UpdateUserInput } from './inputs';
 import { User } from './schemas/user.schema';
 import { UserService } from './services';
+import { PaginatedUsers } from './types';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -13,9 +14,14 @@ export class UserResolver {
     return this.userService.create(input);
   }
 
-  @Query(() => [User], { name: 'listUsers' })
+  @Query(() => [User])
   getAllUsers() {
     return this.userService.findAll();
+  }
+
+  @Query(() => PaginatedUsers, { name: 'listUsers' })
+  listUsers(@Args('input') input: ListUsersInput): Observable<PaginatedUsers> {
+    return this.userService.list(input);
   }
 
   @Query(() => User)

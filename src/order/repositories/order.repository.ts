@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { plainToInstance } from 'class-transformer';
+import { Model, PipelineStage, Types } from 'mongoose';
 import { CoreRepository } from '../../core/repositories/core.repository';
 import { PreorderDocument } from '../../preorder/schemas/preorder.schema';
 import { UserDocument } from '../../user/schemas/user.schema';
-import { Order } from '../schemas/order.schema';
+import { ListOrderInput } from '../inputs/list-order.input';
+import { Order, OrderDocument } from '../schemas/order.schema';
+import { PaginatedOrders } from '../types/paginatedOrders';
 
 @Injectable()
 export class OrderRepository extends CoreRepository<Order> {
@@ -76,5 +79,86 @@ export class OrderRepository extends CoreRepository<Order> {
       })
       .exec();
     return orders.map((order) => ({ ...order.toObject(), id: order._id }));
+  }
+
+  async listOrders(input: ListOrderInput): Promise<PaginatedOrders> {
+    const { page, pageSize, tag, search, userId } = input;
+
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          user: new Types.ObjectId(userId),
+        },
+      },
+      {
+        $lookup: {
+          from: 'preorders',
+          localField: 'preorder',
+          foreignField: '_id',
+          as: 'preorder',
+        },
+      },
+      {
+        $unwind: '$preorder',
+      },
+    ];
+
+    if (tag) {
+      pipeline.push({
+        $match: {
+          'preorder.tags': { $in: [tag] },
+        },
+      });
+    }
+
+    if (search) {
+      pipeline.push({
+        $match: {
+          $or: [
+            {
+              'preorder.productName': { $regex: search, $options: 'i' },
+            },
+            {
+              'preorder.productSKU': { $regex: search, $options: 'i' },
+            },
+          ],
+        },
+      });
+    }
+
+    pipeline.push({
+      $facet: {
+        data: [
+          { $sort: { createdAt: -1 } },
+          { $skip: (page - 1) * pageSize },
+          { $limit: pageSize },
+        ],
+        total: [{ $count: 'count' }],
+      },
+    });
+
+    //TODO: move this type to its own file
+    const result = await this.orderModel.aggregate<{
+      data: OrderDocument[];
+      total: {
+        count: number;
+      }[];
+    }>(pipeline);
+
+    //Change this if by any reason really big sets are returned
+    const edges = result[0].data.map((order) =>
+      plainToInstance(Order, {
+        ...order,
+        preorder: { ...order.preorder, id: order.preorder._id },
+        id: order._id,
+      }),
+    );
+
+    return {
+      edges,
+      total: result[0].total[0]?.count ?? 0,
+      page,
+      pageSize,
+    };
   }
 }

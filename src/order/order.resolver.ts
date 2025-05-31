@@ -1,9 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { CreateOrderInput } from './inputs/create-order.input';
+import { ListOrderInput } from './inputs/list-order.input';
 import { UpdateOrderInput } from './inputs/update-order.input';
-import { OrderService } from './order.service';
 import { Order } from './schemas/order.schema';
+import { OrderService } from './services/order.service';
+import { PaginatedOrders } from './types/paginatedOrders';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -15,8 +17,15 @@ export class OrderResolver {
   }
 
   @Query(() => [Order])
-  listOrders(): Observable<Order[]> {
+  getAllOrders(): Observable<Order[]> {
     return this.orderService.findAll();
+  }
+
+  @Query(() => PaginatedOrders)
+  listOrders(
+    @Args('input') input: ListOrderInput,
+  ): Observable<PaginatedOrders> {
+    return this.orderService.list(input);
   }
 
   @Query(() => Order)

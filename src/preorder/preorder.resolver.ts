@@ -1,9 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
+import { ListPreordersInput } from './input';
 import { CreatePreorderInput } from './input/create-preorder.input';
 import { UpdatePreorderInput } from './input/update-preorder.input';
-import { PreorderService } from './preorder.service';
 import { Preorder } from './schemas/preorder.schema';
+import { PreorderService } from './services/preorder.service';
+import { PaginatedPreorders } from './types';
 
 @Resolver(() => Preorder)
 export class PreorderResolver {
@@ -17,8 +19,15 @@ export class PreorderResolver {
   }
 
   @Query(() => [Preorder])
-  listPreorders(): Observable<Preorder[]> {
+  getAllPreorders(): Observable<Preorder[]> {
     return this.preorderService.findAll();
+  }
+
+  @Query(() => PaginatedPreorders, { name: 'listPreorders' })
+  listPreorders(
+    @Args('input') input: ListPreordersInput,
+  ): Observable<PaginatedPreorders> {
+    return this.preorderService.list(input);
   }
 
   @Query(() => Preorder)

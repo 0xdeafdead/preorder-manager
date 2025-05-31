@@ -1,5 +1,5 @@
 import { DeepPartialMock } from '../../core/types';
-import { OrderService } from '../order.service';
+import { OrderService } from '../services/order.service';
 
 export const orderServiceMock = (): DeepPartialMock<OrderService> => ({
   create: jest.fn(),

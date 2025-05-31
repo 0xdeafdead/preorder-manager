@@ -1,9 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { from, Observable, of, switchMap } from 'rxjs';
-import { CreatePreorderInput } from './input/create-preorder.input';
-import { UpdatePreorderInput } from './input/update-preorder.input';
-import { PreorderRepository } from './repositories/preorder.repository';
-import { Preorder } from './schemas/preorder.schema';
+import {
+  CreatePreorderInput,
+  ListPreordersInput,
+  UpdatePreorderInput,
+} from '../input';
+import { PreorderRepository } from '../repositories/preorder.repository';
+import { Preorder } from '../schemas/preorder.schema';
+import { PaginatedPreorders } from '../types';
 
 @Injectable()
 export class PreorderService {
@@ -18,6 +22,10 @@ export class PreorderService {
 
   findAll(): Observable<Preorder[]> {
     return from(this.preorderRepository.findAll());
+  }
+
+  list(listPreordersInput: ListPreordersInput): Observable<PaginatedPreorders> {
+    return from(this.preorderRepository.listPreorders(listPreordersInput));
   }
 
   findOne(id: string): Observable<Preorder> {
