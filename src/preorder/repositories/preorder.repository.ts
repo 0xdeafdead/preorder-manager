@@ -29,7 +29,6 @@ export class PreorderRepository extends CoreRepository<Preorder> {
   }
 
   async listPreorders(input: ListPreordersInput): Promise<PaginatedPreorders> {
-    console.log('input', input);
     const { page, pageSize, search, tag } = input;
 
     const whereClause: RootFilterQuery<Preorder> = {
@@ -55,7 +54,6 @@ export class PreorderRepository extends CoreRepository<Preorder> {
           plainToInstance(Preorder, { ...doc.toObject(), id: doc._id }),
         ),
       );
-
     const count = await this.preorderModel.countDocuments(whereClause).exec();
     return {
       edges: results,

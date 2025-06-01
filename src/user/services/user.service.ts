@@ -24,7 +24,15 @@ export class UserService {
     return from(this.userRepository.listUsers(listUserInput));
   }
 
-  findOne(id: string): Observable<User> {
+  findByEmail(email: string): Observable<User> {
+    return from(this.userRepository.findOneByEmail(email)).pipe(
+      switchMap((user) => {
+        return of(user);
+      }),
+    );
+  }
+
+  findById(id: string): Observable<User> {
     return from(this.userRepository.findById(id)).pipe(
       switchMap((user) => {
         if (!user) {

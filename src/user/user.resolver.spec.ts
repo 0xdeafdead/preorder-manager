@@ -69,10 +69,25 @@ describe('UserResolver', () => {
     const id = buildMongoId();
     const user = UserFactory.build();
     it('should call userService.findOne', (done) => {
-      userService.findOne?.mockReturnValueOnce(of(user));
+      userService.findById?.mockReturnValueOnce(of(user));
       resolver.getUserById(id).subscribe({
         next: (user) => {
-          expect(userService.findOne).toHaveBeenCalledWith(id);
+          expect(userService.findById).toHaveBeenCalledWith(id);
+          expect(user).toEqual(user);
+          done();
+        },
+      });
+    });
+  });
+
+  describe('getUserByEmail', () => {
+    const email = faker.internet.email();
+    const user = UserFactory.build();
+    it('should call userService.findByEmail', (done) => {
+      userService.findByEmail?.mockReturnValueOnce(of(user));
+      resolver.getUserByEmail(email).subscribe({
+        next: (user) => {
+          expect(userService.findByEmail).toHaveBeenCalledWith(email);
           expect(user).toEqual(user);
           done();
         },

@@ -4,4 +4,6 @@ import { UserRepository } from '../repositories/user.repository';
 
 export const userRepositoryMock = (): DeepPartialMock<UserRepository> => ({
   ...coreRepositoryMock,
+  findOneByEmail: jest.fn(),
+  findById: jest.fn(),
 });

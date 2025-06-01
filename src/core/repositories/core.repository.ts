@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model, Types } from 'mongoose';
+import { Model, RootFilterQuery, Types } from 'mongoose';
 
 @Injectable()
 export class CoreRepository<T> {
@@ -22,6 +22,14 @@ export class CoreRepository<T> {
 
   async findById(id: string): Promise<T | null> {
     const entity = await this.coreModel.findById(id).exec();
+    if (!entity) {
+      return null;
+    }
+    return { ...entity.toObject(), id: entity._id };
+  }
+
+  async findOneBy(where: RootFilterQuery<T>): Promise<T | null> {
+    const entity = await this.coreModel.findOne(where).exec();
     if (!entity) {
       return null;
     }

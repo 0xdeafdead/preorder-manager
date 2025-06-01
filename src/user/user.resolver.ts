@@ -26,7 +26,12 @@ export class UserResolver {
 
   @Query(() => User)
   getUserById(@Args('id') id: string): Observable<User> {
-    return this.userService.findOne(id);
+    return this.userService.findById(id);
+  }
+
+  @Query(() => User)
+  getUserByEmail(@Args('email') email: string): Observable<User> {
+    return this.userService.findByEmail(email);
   }
 
   @Mutation(() => User)

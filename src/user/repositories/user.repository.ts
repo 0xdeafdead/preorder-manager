@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { plainToInstance } from 'class-transformer';
 import { Model, RootFilterQuery } from 'mongoose';
@@ -11,6 +11,14 @@ import { PaginatedUsers } from '../types';
 export class UserRepository extends CoreRepository<User> {
   constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {
     super(userModel);
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    const user = await this.findOneBy({ email });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async listUsers(input: ListUsersInput): Promise<PaginatedUsers> {

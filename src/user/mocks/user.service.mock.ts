@@ -4,7 +4,8 @@ import { UserService } from '../services';
 export const userServiceMock = (): DeepPartialMock<UserService> => ({
   create: jest.fn(),
   findAll: jest.fn(),
-  findOne: jest.fn(),
+  findById: jest.fn(),
+  findByEmail: jest.fn(),
   update: jest.fn(),
   softDelete: jest.fn(),
   remove: jest.fn(),

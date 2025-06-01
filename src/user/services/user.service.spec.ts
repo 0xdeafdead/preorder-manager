@@ -69,14 +69,31 @@ describe('UserService', () => {
     });
   });
 
-  describe('findOne', () => {
+  describe('findByEmail', () => {
+    const email = faker.internet.email();
+    const user = UserFactory.build();
+    it('should return a user', (done) => {
+      userRepository.findOneByEmail?.mockResolvedValue(user);
+
+      //Act & Assert
+      service.findByEmail(email).subscribe({
+        next: (result) => {
+          expect(userRepository.findOneByEmail).toHaveBeenCalledWith(email);
+          expect(result).toEqual(user);
+          done();
+        },
+      });
+    });
+  });
+
+  describe('findById', () => {
     const id = buildMongoId();
     const user = UserFactory.build();
     it('should return a user', (done) => {
       userRepository.findById?.mockResolvedValue(user);
 
       //Act & Assert
-      service.findOne(id).subscribe({
+      service.findById(id).subscribe({
         next: (result) => {
           expect(userRepository.findById).toHaveBeenCalledWith(id);
           expect(result).toEqual(user);
@@ -89,7 +106,7 @@ describe('UserService', () => {
       userRepository.findById?.mockResolvedValue(null);
 
       //Act & Assert
-      service.findOne(id).subscribe({
+      service.findById(id).subscribe({
         error: (err) => {
           expect(err).toBeInstanceOf(NotFoundException);
           done();

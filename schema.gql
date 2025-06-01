@@ -126,6 +126,7 @@ type Query {
   getAllPreorders: [Preorder!]!
   getAllUsers: [User!]!
   getOrderById(id: String!): Order!
+  getUserByEmail(email: String!): User!
   getUserById(id: String!): User!
   listOrders(input: ListOrderInput!): PaginatedOrders!
   listPreorders(input: ListPreordersInput!): PaginatedPreorders!
