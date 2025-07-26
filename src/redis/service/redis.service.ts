@@ -23,9 +23,7 @@ export class RedisService {
       await this.redis.set(key, value, 'EX', TTL);
       return true;
     } catch (err) {
-      this.logger.error(
-        `[RedisService] Could not store string. ${err.message}`,
-      );
+      this.logger.error(`Could not store string. ${err}`);
       return false;
     }
   }
@@ -35,7 +33,7 @@ export class RedisService {
       const res = await this.redis.get(key);
       return res;
     } catch (err) {
-      this.logger.error(`Could not retrieve string. ${err.message}`);
+      this.logger.error(`Could not retrieve string. ${err}`);
       return null;
     }
   }
@@ -51,7 +49,7 @@ export class RedisService {
       await this.redis.expire(key, TTL);
       return true;
     } catch (err) {
-      this.logger.error(`Could not store JSON object. ${err.message}`);
+      this.logger.error(`Could not store JSON object. ${err}`);
       return false;
     }
   }
@@ -68,7 +66,7 @@ export class RedisService {
       return JSON.parse(data as string) as T[];
     } catch (err) {
       this.logger.error(
-        `There was an error retrieven JSON object from cache. ${err.message}`,
+        `There was an error retrieven JSON object from cache. ${err}`,
       );
       return null;
     }
@@ -87,7 +85,7 @@ export class RedisService {
       return true;
     } catch (err) {
       if (err instanceof Error)
-        this.logger.error(`Could not merge JSON object. ${err.message}`);
+        this.logger.error(`Could not merge JSON object. ${err}`);
       return false;
     }
   }
@@ -97,10 +95,9 @@ export class RedisService {
       .del(keys)
       .then((res) => res === keys.length)
       .catch((err) => {
-        if (err instanceof Error)
-          this.logger.error(
-            `${err.cause || 'Could not remove keys:'} ${keys.join(', ')}`,
-          );
+        this.logger.error(
+          `${err || 'Could not remove keys:'} ${keys.join(', ')}`,
+        );
         return null;
       });
   }
@@ -121,10 +118,9 @@ export class RedisService {
       }
       return true;
     } catch (err) {
-      if (err instanceof Error)
-        this.logger.error(
-          `Could not delete object from path ${path} in key ${key} . ${err.message}`,
-        );
+      this.logger.error(
+        `Could not delete object from path ${path} in key ${key} . ${err}`,
+      );
       return false;
     }
   }
