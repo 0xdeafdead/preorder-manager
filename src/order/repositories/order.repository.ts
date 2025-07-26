@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { plainToInstance } from 'class-transformer';
 import { Model, PipelineStage, Types } from 'mongoose';
 import { CoreRepository } from '../../core/repositories/core.repository';
-import { PreorderDocument } from '../../preorder/schemas/preorder.schema';
-import { UserDocument } from '../../user/schemas/user.schema';
-import { ListOrderInput } from '../inputs/list-order.input';
-import { Order, OrderDocument } from '../schemas/order.schema';
-import { PaginatedOrders } from '../types/paginatedOrders';
+import { PreorderDocument } from '../../preorder/schemas';
+import { UserDocument } from '../../user/schemas';
+import { ListOrderInput } from '../inputs';
+import { Order, OrderDocument } from '../schemas';
+import { PaginatedOrders } from '../types';
 
 @Injectable()
 export class OrderRepository extends CoreRepository<Order> {

@@ -16,7 +16,7 @@ export class User {
   @Field(() => String)
   fullName: string;
 
-  @Prop({ unique: true })
+  @Prop({ unique: true, index: true })
   @Field(() => String)
   email: string;
 

@@ -1,5 +1,5 @@
 import { DeepPartialMock } from '../../core/types/deepPartialMock';
-import { OrderRepository } from '../repositories/order.repository';
+import { OrderRepository } from '../repositories';
 
 export const orderRepositoryMock = (): DeepPartialMock<OrderRepository> => ({
   create: jest.fn(),

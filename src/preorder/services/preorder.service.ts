@@ -5,8 +5,8 @@ import {
   ListPreordersInput,
   UpdatePreorderInput,
 } from '../input';
-import { PreorderRepository } from '../repositories/preorder.repository';
-import { Preorder } from '../schemas/preorder.schema';
+import { PreorderRepository } from '../repositories';
+import { Preorder } from '../schemas';
 import { PaginatedPreorders } from '../types';
 
 @Injectable()
@@ -62,6 +62,7 @@ export class PreorderService {
     );
   }
 
+  //TODO: implement cascade update for user orders
   softDelete(id: string): Observable<Preorder> {
     return from(
       this.preorderRepository.update(id, {
@@ -77,6 +78,7 @@ export class PreorderService {
     );
   }
 
+  //TODO: implement cascade delete for user orders
   remove(id: string): Observable<Preorder> {
     return from(this.preorderRepository.delete(id)).pipe(
       switchMap((preorder) => {

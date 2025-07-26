@@ -11,6 +11,16 @@ export class CoreRepository<T> {
     return { ...newEntity, id: newEntity._id };
   }
 
+  async upsert(filterClause: RootFilterQuery<T>, data: Partial<T>): Promise<T> {
+    const options = { upsert: true, new: true };
+    const entity = await this.coreModel.findOneAndUpdate(
+      filterClause,
+      data,
+      options,
+    );
+    return { ...entity!.toObject(), id: entity!._id };
+  }
+
   async findAll(): Promise<T[]> {
     return (await this.coreModel.find().sort({ createdAt: -1 }).exec()).map(
       (entity) => ({

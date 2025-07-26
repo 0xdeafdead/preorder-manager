@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Game } from './core/enums';
 import { OrderSchema } from './order/schemas/order.schema';
 import { PreorderSchema } from './preorder/schemas/preorder.schema';
 import { UserSchema } from './user/schemas/user.schema';
@@ -36,7 +37,7 @@ async function seed() {
       releaseDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30),
       closeDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 20),
       available: true,
-      tags: ['ONEPIECE'],
+      tags: [Game.ONEPIECE],
     },
     {
       productSKU: 'PKM-001',
@@ -45,7 +46,7 @@ async function seed() {
       releaseDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 40),
       closeDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 25),
       available: true,
-      tags: ['POKEMON'],
+      tags: [Game.POKEMON],
     },
     {
       productSKU: 'DIGI-001',
@@ -54,7 +55,7 @@ async function seed() {
       releaseDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 15),
       closeDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 10),
       available: true,
-      tags: ['DIGIMON'],
+      tags: [Game.DIGIMON],
     },
     {
       productSKU: 'MTG-001',
@@ -63,7 +64,7 @@ async function seed() {
       releaseDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 60),
       closeDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 50),
       available: true,
-      tags: ['MTG'],
+      tags: [Game.MTG],
     },
     {
       productSKU: 'PKM-002',
@@ -72,7 +73,7 @@ async function seed() {
       releaseDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 35),
       closeDate: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 28),
       available: true,
-      tags: ['POKEMON'],
+      tags: [Game.POKEMON],
     },
   ]);
 

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Types } from 'mongoose';
 import { buildMongoId, createMockDataFactory } from '../../core/factories';
-import { Order } from '../schemas/order.schema';
+import { Order } from '../schemas';
 
 export const OrderFactory = createMockDataFactory<Order>(() => ({
   id: new Types.ObjectId(buildMongoId()),

@@ -32,8 +32,10 @@ scalar DateTime
 
 enum Game {
   DIGIMON
+  GUNDAM
   MTG
   ONEPIECE
+  OTROS
   POKEMON
 }
 
@@ -122,9 +124,6 @@ type Preorder {
 
 type Query {
   findPreorderById(id: String!): Preorder!
-  getAllOrders: [Order!]!
-  getAllPreorders: [Preorder!]!
-  getAllUsers: [User!]!
   getOrderById(id: String!): Order!
   getUserByEmail(email: String!): User!
   getUserById(id: String!): User!
@@ -154,7 +153,6 @@ input UpdatePreorderInput {
 }
 
 input UpdateUserInput {
-  email: String
   fullName: String
   id: String!
 }

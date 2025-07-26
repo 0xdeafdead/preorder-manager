@@ -6,7 +6,7 @@ import { DeepPartialMock } from '../../core/types';
 import { UserFactory } from '../factories';
 import { CreateUserInput, UpdateUserInput } from '../inputs';
 import { userRepositoryMock } from '../mocks';
-import { UserRepository } from '../repositories/user.repository';
+import { UserRepository } from '../repositories';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
