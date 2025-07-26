@@ -3,12 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Types } from 'mongoose';
 import { of } from 'rxjs';
 import { buildMongoId } from '../../core/factories';
-import { DeepPartialMock } from '../../core/types/deepPartialMock';
-import { OrderFactory } from '../factories/order.factory';
-import { CreateOrderInput } from '../inputs/create-order.input';
-import { UpdateOrderInput } from '../inputs/update-order.input';
-import { orderRepositoryMock } from '../mocks/order.repository.mock';
-import { OrderRepository } from '../repositories/order.repository';
+import { DeepPartialMock } from '../../core/types';
+import { OrderFactory } from '../factories';
+import { CreateOrderInput, UpdateOrderInput } from '../inputs';
+import { orderRepositoryMock } from '../mocks';
+import { OrderRepository } from '../repositories';
 import { OrderService } from './order.service';
 
 describe('OrderService', () => {

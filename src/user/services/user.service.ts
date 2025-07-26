@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { from, Observable, of, switchMap } from 'rxjs';
 import { CreateUserInput, ListUsersInput, UpdateUserInput } from '../inputs';
-import { UserRepository } from '../repositories/user.repository';
-import { User } from '../schemas/user.schema';
+import { UserRepository } from '../repositories';
+import { User } from '../schemas';
 import { PaginatedUsers } from '../types';
 
 @Injectable()
@@ -14,6 +14,10 @@ export class UserService {
 
   create(createUserInput: CreateUserInput): Observable<User> {
     return from(this.userRepository.create(createUserInput));
+  }
+
+  upsert(createUserInput: CreateUserInput): Observable<User> {
+    return from(this.userRepository.upsertUser(createUserInput));
   }
 
   findAll(): Observable<User[]> {

@@ -2,8 +2,8 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, now, Types } from 'mongoose';
 import { MongoObjectId } from '../../core/scalars/MongoObjecId';
-import { Preorder } from '../../preorder/schemas/preorder.schema';
-import { User } from '../../user/schemas/user.schema';
+import { Preorder } from '../../preorder/schemas';
+import { User } from '../../user/schemas';
 
 export type OrderDocument = HydratedDocument<Order>;
 

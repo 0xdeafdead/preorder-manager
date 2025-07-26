@@ -9,7 +9,12 @@ export class ListOrderInput extends PaginationParams {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  userId?: string;
+
+  // @Field(() => String)
+  // @IsString()
+  // @IsNotEmpty()
+  // userEmail?: string;
 
   @Field(() => Game, { nullable: true })
   @IsOptional()

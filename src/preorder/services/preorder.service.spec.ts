@@ -3,10 +3,10 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { buildMongoId } from '../../core/factories';
 import { DeepPartialMock } from '../../core/types';
-import { PreorderFactory } from '../factories/preorder.factory';
+import { PreorderFactory } from '../factories';
 import { CreatePreorderInput, UpdatePreorderInput } from '../input';
 import { preorderRepositoryMock } from '../mocks';
-import { PreorderRepository } from '../repositories/preorder.repository';
+import { PreorderRepository } from '../repositories';
 import { PreorderService } from './preorder.service';
 
 describe('PreorderService', () => {

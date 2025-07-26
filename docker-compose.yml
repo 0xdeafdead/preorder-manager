@@ -13,9 +13,21 @@ services:
       - MONGO_INITDB_DATABASE=preorder-manager #${MONGO_DB}
       - MONGO_INITDB_ROOT_USERNAME=root #${MONGO_ADMIN_USER}
       - MONGO_INITDB_ROOT_PASSWORD=password #${MONGO_ADMIN_PASSWORD}
-
+  redis:
+    container_name: preorder-manager-redis
+    image: redis/redis-stack:latest
+    restart: always
+    environment:
+      REDIS_ARGS: '--requirepass preMGMT --loglevel verbose'
+    ports:
+      - 6379:6379
+      - 8001:8001
+    volumes:
+      - redis_data:/data:rw
 volumes:
   mongo_data:
     driver: local
   mongo_config:
+    driver: local
+  redis_data:
     driver: local

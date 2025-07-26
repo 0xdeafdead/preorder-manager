@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { plainToInstance } from 'class-transformer';
 import { Model, RootFilterQuery } from 'mongoose';
 import { CoreRepository } from '../../core/repositories/core.repository';
-import { ListUsersInput } from '../inputs';
+import { CreateUserInput, ListUsersInput } from '../inputs';
 import { User } from '../schemas/user.schema';
 import { PaginatedUsers } from '../types';
 
@@ -11,6 +11,10 @@ import { PaginatedUsers } from '../types';
 export class UserRepository extends CoreRepository<User> {
   constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {
     super(userModel);
+  }
+
+  async upsertUser(data: CreateUserInput): Promise<User> {
+    return this.upsert({ email: data.email }, data);
   }
 
   async findOneByEmail(email: string): Promise<User> {

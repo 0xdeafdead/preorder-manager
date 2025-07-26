@@ -5,12 +5,10 @@ import {
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { from, Observable, of, switchMap } from 'rxjs';
-import { CreateOrderInput } from '../inputs/create-order.input';
-import { ListOrderInput } from '../inputs/list-order.input';
-import { UpdateOrderInput } from '../inputs/update-order.input';
-import { OrderRepository } from '../repositories/order.repository';
-import { Order } from '../schemas/order.schema';
-import { PaginatedOrders } from '../types/paginatedOrders';
+import { CreateOrderInput, ListOrderInput, UpdateOrderInput } from '../inputs';
+import { OrderRepository } from '../repositories';
+import { Order } from '../schemas';
+import { PaginatedOrders } from '../types';
 
 @Injectable()
 export class OrderService {

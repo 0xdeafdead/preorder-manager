@@ -11,6 +11,8 @@ export default tseslint.config(
       'src/main.ts',
       'src/**/factories/**',
       'src/**/mocks/**',
+      'src/**/*.guard.ts',
+      'src/core/config/**.ts',
     ],
   },
   eslint.configs.recommended,
